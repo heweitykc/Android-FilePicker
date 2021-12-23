@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.annotation.IntegerRes
 import droidninja.filepicker.models.FileType
 import droidninja.filepicker.models.sort.SortingTypes
+import droidninja.filepicker.models.sort.StorageTypes
 import java.util.ArrayList
 
 /**
@@ -34,6 +35,11 @@ class FilePickerBuilder {
 
     fun setMaxCount(maxCount: Int): FilePickerBuilder {
         PickerManager.setMaxCount(maxCount)
+        return this
+    }
+
+    fun setStorageType(type: StorageTypes): FilePickerBuilder {
+        PickerManager.storagetype = type
         return this
     }
 

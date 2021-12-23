@@ -23,6 +23,7 @@ import java.util.List;
 import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 import droidninja.filepicker.models.sort.SortingTypes;
+import droidninja.filepicker.models.sort.StorageTypes;
 import droidninja.filepicker.utils.ContentUriUtils;
 import droidninja.filepicker.utils.StorageTool;
 import pub.devrel.easypermissions.AfterPermissionGranted;
@@ -195,6 +196,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     Toast.LENGTH_SHORT).show();
         } else {
             FilePickerBuilder.getInstance()
+                    .setStorageType(StorageTypes.QQ)
                     .setMaxCount(1)
                     .setSelectedFiles(docPaths)
                     .setActivityTheme(R.style.FilePickerTheme)

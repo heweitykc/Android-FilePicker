@@ -6,54 +6,79 @@ import android.database.Cursor
 import android.provider.BaseColumns
 import android.provider.MediaStore
 import android.text.TextUtils
+import android.util.Log
 import androidx.annotation.WorkerThread
+import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import droidninja.filepicker.FilePickerConst
 import droidninja.filepicker.PickerManager
 import droidninja.filepicker.models.Document
 import droidninja.filepicker.models.FileType
+import droidninja.filepicker.models.sort.StorageTypes
 import droidninja.filepicker.utils.FilePickerUtils
+import droidninja.filepicker.utils.StorageTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.*
 
 class VMDocPicker(application: Application) : BaseViewModel(application) {
+    val WEIXIN_DIR = "/Android/data/com.tencent.mm/MicroMsg/Download/"
+    val QQ_DIR = "/Android/data/com.tencent.mobileqq/Tencent/QQfile_recv/"
+
     private val _lvDocData = MutableLiveData<HashMap<FileType, List<Document>>>()
     val lvDocData: LiveData<HashMap<FileType, List<Document>>>
         get() = _lvDocData
 
 
-    fun getDocs(fileTypes: List<FileType>, comparator: Comparator<Document>?) {
+    fun getDocs(fileTypes: List<FileType>, storagetype: StorageTypes, comparator: Comparator<Document>?) {
         launchDataLoad {
-            val dirs = queryDocs(fileTypes, comparator)
+            val dirs = queryDocs(fileTypes, storagetype, comparator)
             _lvDocData.postValue(dirs)
         }
     }
 
     @WorkerThread
-    suspend fun queryDocs(fileTypes: List<FileType>, comparator: Comparator<Document>?): HashMap<FileType, List<Document>> {
+    suspend fun queryDocs(fileTypes: List<FileType>, storagetype:StorageTypes, comparator: Comparator<Document>?): HashMap<FileType, List<Document>> {
         var data = HashMap<FileType, List<Document>>()
-        withContext(Dispatchers.IO) {
 
-            val selection = ("${MediaStore.Files.FileColumns.MEDIA_TYPE}!=${MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE}" +
-                    " AND ${MediaStore.Files.FileColumns.MEDIA_TYPE}!=${MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO}")
 
-            val DOC_PROJECTION = arrayOf(MediaStore.Files.FileColumns._ID,
+        if(storagetype == StorageTypes.COMMON){
+            withContext(Dispatchers.IO) {
+                val selection = ("${MediaStore.Files.FileColumns.MEDIA_TYPE}!=${MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE}" +
+                        " AND ${MediaStore.Files.FileColumns.MEDIA_TYPE}!=${MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO}")
+
+                val DOC_PROJECTION = arrayOf(MediaStore.Files.FileColumns._ID,
                     MediaStore.Files.FileColumns.DATA,
                     MediaStore.Files.FileColumns.MIME_TYPE,
                     MediaStore.Files.FileColumns.SIZE,
                     MediaStore.Files.FileColumns.DATE_ADDED,
                     MediaStore.Files.FileColumns.TITLE)
 
-            val cursor = getApplication<Application>().contentResolver.query(MediaStore.Files.getContentUri("external"), DOC_PROJECTION, selection, null, MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
+                val cursor = getApplication<Application>().contentResolver.query(MediaStore.Files.getContentUri("external"), DOC_PROJECTION, selection, null, MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
 
-            if (cursor != null) {
-                data = createDocumentType(fileTypes, comparator, getDocumentFromCursor(cursor))
-                cursor.close()
+                if (cursor != null) {
+                    data = createDocumentType(fileTypes, comparator, getDocumentFromCursor(cursor))
+                    cursor.close()
+                }
+            }
+        } else {
+            withContext(Dispatchers.IO) {
+                var exdir = ""
+                if(storagetype == StorageTypes.QQ){
+                    exdir = QQ_DIR
+                } else if(storagetype == StorageTypes.WEIXIN){
+                    exdir = WEIXIN_DIR
+                }
+                if(exdir.isNotEmpty()){
+                    val files = StorageTool.getFiles(getApplication<Application>().applicationContext, exdir)
+                    if(files.isNotEmpty()){
+                        data = createDocumentType(fileTypes, comparator, getDocumentFromFiles(files))
+                    }
+                }
             }
         }
+
         return data
     }
 
@@ -110,6 +135,32 @@ class VMDocPicker(application: Application) : BaseViewModel(application) {
             }
         }
 
+        return documents
+    }
+
+    @WorkerThread
+    private fun getDocumentFromFiles(data: Array<DocumentFile>): MutableList<Document> {
+        val documents = mutableListOf<Document>()
+        for (fileitem in data){
+            val imageId:Long = 0
+            val path = fileitem.uri.path
+            val title = fileitem.name;
+
+            if (path != null && title != null) {
+                val fileType = getFileType(PickerManager.getFileTypes(), path)
+                val fileinfo = File(path)
+                Log.e("VMSpecialPicker", path);
+                Log.e("VMSpecialPicker", title);
+                Log.e("VMSpecialPicker", fileType.toString());
+                val document = title?.let { Document(imageId, it, fileitem.uri) }
+                document.fileType = fileType
+                document.size = fileinfo.length().toString()
+                document.mtime = (fileinfo.lastModified() / 1000).toString()
+                document.mimeType = StorageTool.getMimeType(fileinfo)
+
+                if (!documents.contains(document)) documents.add(document)
+            }
+        }
         return documents
     }
 

@@ -1,18 +1,24 @@
 package droidninja.filepicker.utils;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import androidx.documentfile.provider.DocumentFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.FileNameMap;
+import java.net.URLConnection;
 
 public class StorageTool {
 
@@ -103,6 +109,12 @@ public class StorageTool {
                             | Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
             );
         }
+    }
+
+    public static String getMimeType(File file){
+        FileNameMap fileNameMap = URLConnection.getFileNameMap();
+        String type = fileNameMap.getContentTypeFor(file.getName());
+        return type;
     }
 
 }

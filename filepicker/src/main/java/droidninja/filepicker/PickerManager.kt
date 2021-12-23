@@ -7,6 +7,7 @@ import java.util.ArrayList
 import droidninja.filepicker.models.BaseFile
 import droidninja.filepicker.models.FileType
 import droidninja.filepicker.models.sort.SortingTypes
+import droidninja.filepicker.models.sort.StorageTypes
 import java.util.LinkedHashSet
 
 /**
@@ -15,6 +16,7 @@ import java.util.LinkedHashSet
 object PickerManager {
     private var maxCount = FilePickerConst.DEFAULT_MAX_COUNT
     private var showImages = true
+
     var cameraDrawable = R.drawable.ic_camera
     var sortingType = SortingTypes.NONE
 
@@ -40,6 +42,7 @@ object PickerManager {
         get() = field
 
     var isEnableCamera = true
+    var storagetype: StorageTypes = StorageTypes.COMMON
 
     /**
      * Recyclerview span count for both folder and detail screen

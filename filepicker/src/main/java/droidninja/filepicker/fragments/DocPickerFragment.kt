@@ -15,15 +15,17 @@ import droidninja.filepicker.R
 import droidninja.filepicker.adapters.SectionsPagerAdapter
 import droidninja.filepicker.models.Document
 import droidninja.filepicker.models.FileType
+import droidninja.filepicker.models.sort.StorageTypes
 import droidninja.filepicker.utils.TabLayoutHelper
+import droidninja.filepicker.viewmodels.BaseViewModel
 import droidninja.filepicker.viewmodels.VMDocPicker
 import droidninja.filepicker.viewmodels.VMSpecialPicker
 
 class DocPickerFragment : BaseFragment() {
 
     lateinit var tabLayout: TabLayout
-//    lateinit var viewModel: VMDocPicker
-    lateinit var viewModel: VMSpecialPicker
+    lateinit var viewModel: VMDocPicker
+//    lateinit var viewSpecialModel: VMSpecialPicker
     lateinit var viewPager: ViewPager
     private var progressBar: ProgressBar? = null
     private var mListener: DocPickerFragmentListener? = null
@@ -33,8 +35,7 @@ class DocPickerFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-//        viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory(requireActivity().application)).get(VMDocPicker::class.java)
-        viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory(requireActivity().application)).get(VMSpecialPicker::class.java)
+        viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory(requireActivity().application)).get(VMDocPicker::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -69,7 +70,8 @@ class DocPickerFragment : BaseFragment() {
             progressBar?.visibility = View.GONE
             setDataOnFragments(files)
         })
-        viewModel.getDocs(PickerManager.getFileTypes(), PickerManager.sortingType.comparator)
+
+        viewModel.getDocs(PickerManager.getFileTypes(), PickerManager.storagetype, PickerManager.sortingType.comparator)
     }
 
     private fun setViews(view: View) {

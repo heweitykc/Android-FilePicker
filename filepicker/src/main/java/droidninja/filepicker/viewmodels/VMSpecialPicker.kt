@@ -58,7 +58,6 @@ class VMSpecialPicker(application: Application) : BaseViewModel(application) {
 
         for (fileType in fileTypes) {
             val documentListFilteredByType = documents.filter { document -> FilePickerUtils.containExt(fileType.extensions, document.path) }
-//            val documentListFilteredByType = documents
             comparator?.let {
                 documentListFilteredByType.sortedWith(comparator)
             }
@@ -79,13 +78,14 @@ class VMSpecialPicker(application: Application) : BaseViewModel(application) {
 
             if (path != null && title != null) {
                 val fileType = getFileType(PickerManager.getFileTypes(), path)
+                val fileinfo = File(path)
                 Log.e("VMSpecialPicker", path);
                 Log.e("VMSpecialPicker", title);
                 Log.e("VMSpecialPicker", fileType.toString());
                 val document = title?.let { Document(imageId, it, fileitem.uri) }
                 document.fileType = fileType
-
-                document.size = "100"
+                document.size = fileinfo.length().toString()
+                document.mtime = (fileinfo.lastModified() / 1000).toString()
 
                 if (!documents.contains(document)) documents.add(document)
             }
