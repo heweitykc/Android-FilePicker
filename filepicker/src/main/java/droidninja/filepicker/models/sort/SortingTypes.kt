@@ -7,5 +7,5 @@ import java.util.*
  * Created by gabriel on 10/2/17.
  */
 enum class SortingTypes(val comparator: Comparator<Document>?) {
-    NAME(NameComparator()), NONE(null);
+    NAME(NameComparator()), MTIME(MtimeComparator()), NONE(null);
 }

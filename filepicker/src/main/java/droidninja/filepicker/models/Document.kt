@@ -9,5 +9,6 @@ class Document @JvmOverloads constructor(override var id: Long = 0,
                                          override var path: Uri,
                                          var mimeType: String? = null,
                                          var size: String? = null,
+                                         var mtime: String? = null,
                                          var fileType: FileType? = null
 ) : BaseFile(id, name, path)
