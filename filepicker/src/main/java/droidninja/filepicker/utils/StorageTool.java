@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Environment;
 import android.util.Log;
 
 import androidx.documentfile.provider.DocumentFile;
@@ -15,32 +16,7 @@ import java.io.InputStream;
 
 public class StorageTool {
 
-    static final int REQUEST_CODE_FOR_DIR = 112;
-
-//
-//    private final ActivityEventListener mActivityEventListener = new BaseActivityEventListener() {
-//
-//        @Override
-//        public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent intent) {
-//            StorageTool.this.savePermission(requestCode, intent);
-//        }
-//    };
-//
-//    private ReactApplicationContext reactContext;
-//    private Promise requestPermissionPromise;
-//
-//    public StorageTool(ReactApplicationContext reactContext) {
-//        super(reactContext);
-//
-//        this.reactContext = reactContext;
-//        this.reactContext.addActivityEventListener(mActivityEventListener);
-//    }
-//
-//    @Override
-//    public String getName() {
-//        return "StorageTool";
-//    }
-//
+    static public final int REQUEST_CODE_FOR_DIR = 112;
 
     static public void requestStoragePermission(Activity context, String dir) {
         fileUriUtils.startFor(dir, context, StorageTool.REQUEST_CODE_FOR_DIR);
@@ -56,8 +32,10 @@ public class StorageTool {
     }
 
 
-    static public DocumentFile[] getFiles(Activity context, String dir) {
-        DocumentFile file = fileUriUtils.getDoucmentTree(context, dir);
+    static public DocumentFile[] getFiles(Context context, String dir) {
+        File externalStorageDirectory = Environment.getExternalStorageDirectory();
+        final String externalDir = externalStorageDirectory.getAbsolutePath();
+        DocumentFile file = fileUriUtils.getDoucmentTree(context, externalDir + dir);
         DocumentFile[] files = file.listFiles();
         return files;
     }

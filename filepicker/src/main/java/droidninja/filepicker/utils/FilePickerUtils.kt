@@ -33,7 +33,18 @@ object FilePickerUtils {
         }
         return false
     }
+
+    fun containExt(types: Array<String>,  uri:Uri): Boolean {
+        val filepath = uri.path ?: return false
+        for (type in types) {
+            if(filepath.endsWith(type)){
+                return true
+            }
+        }
+        return false
+    }
 }
+
 
 fun ContentResolver.registerObserver(
         uri: Uri,

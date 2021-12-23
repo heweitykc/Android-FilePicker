@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.OrientationHelper;
@@ -23,6 +24,7 @@ import droidninja.filepicker.FilePickerBuilder;
 import droidninja.filepicker.FilePickerConst;
 import droidninja.filepicker.models.sort.SortingTypes;
 import droidninja.filepicker.utils.ContentUriUtils;
+import droidninja.filepicker.utils.StorageTool;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -40,12 +42,23 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        findViewById(R.id.pick_photo).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.get_permission).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pickPhotoClicked();
+                if(StorageTool.hasRootStoragePermission(MainActivity.this)){
+                    return;
+                }
+                StorageTool.requestRootStoragePermission(MainActivity.this);
             }
         });
+
+        findViewById(R.id.pick_doc).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pickDocClicked();
+            }
+        });
+
         findViewById(R.id.pick_doc).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,6 +92,12 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == StorageTool.REQUEST_CODE_FOR_DIR){
+            StorageTool.savePermission(this, requestCode, data);
+            return;
+        }
+
         switch (requestCode) {
             case CUSTOM_REQUEST_CODE:
                 if (resultCode == Activity.RESULT_OK && data != null) {
