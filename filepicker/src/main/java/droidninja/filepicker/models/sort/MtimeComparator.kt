@@ -12,6 +12,6 @@ class MtimeComparator : Comparator<Document> {
         var time2 = o2.mtime?.toUInt()
         if(time1 == null ) time1 = UInt.MIN_VALUE;
         if(time2 == null ) time2 = UInt.MIN_VALUE;
-        return time1.compareTo(time2)
+        return time2.compareTo(time1)
     }
 }

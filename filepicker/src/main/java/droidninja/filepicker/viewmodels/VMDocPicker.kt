@@ -23,8 +23,22 @@ import java.io.File
 import java.util.*
 
 class VMDocPicker(application: Application) : BaseViewModel(application) {
-    val WEIXIN_DIR = "/Android/data/com.tencent.mm/MicroMsg/Download/"
-    val QQ_DIR = "/Android/data/com.tencent.mobileqq/Tencent/QQfile_recv/"
+
+    companion object {
+        val APP_DIR_LIST = arrayOf(
+            "/Android/data/com.tencent.mm/MicroMsg/Download/",
+            "/Android/data/com.tencent.mobileqq/Tencent/QQfile_recv/"
+        )
+        var DOC_PROJECTION = arrayOf(MediaStore.Files.FileColumns._ID,
+            MediaStore.Files.FileColumns.DATA,
+            MediaStore.Files.FileColumns.MIME_TYPE,
+            MediaStore.Files.FileColumns.SIZE,
+            MediaStore.Files.FileColumns.DATE_MODIFIED,
+            MediaStore.Files.FileColumns.TITLE)
+
+        var DOC_SELECTION_STR = ("${MediaStore.Files.FileColumns.MEDIA_TYPE}!=${MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE}" +
+                " AND ${MediaStore.Files.FileColumns.MEDIA_TYPE}!=${MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO}")
+    }
 
     private val _lvDocData = MutableLiveData<HashMap<FileType, List<Document>>>()
     val lvDocData: LiveData<HashMap<FileType, List<Document>>>
@@ -40,46 +54,31 @@ class VMDocPicker(application: Application) : BaseViewModel(application) {
 
     @WorkerThread
     suspend fun queryDocs(fileTypes: List<FileType>, storagetype:StorageTypes, comparator: Comparator<Document>?): HashMap<FileType, List<Document>> {
-        var data = HashMap<FileType, List<Document>>()
+        val documents = mutableListOf<Document>()
 
-
-        if(storagetype == StorageTypes.COMMON){
-            withContext(Dispatchers.IO) {
-                val selection = ("${MediaStore.Files.FileColumns.MEDIA_TYPE}!=${MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE}" +
-                        " AND ${MediaStore.Files.FileColumns.MEDIA_TYPE}!=${MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO}")
-
-                val DOC_PROJECTION = arrayOf(MediaStore.Files.FileColumns._ID,
-                    MediaStore.Files.FileColumns.DATA,
-                    MediaStore.Files.FileColumns.MIME_TYPE,
-                    MediaStore.Files.FileColumns.SIZE,
-                    MediaStore.Files.FileColumns.DATE_ADDED,
-                    MediaStore.Files.FileColumns.TITLE)
-
-                val cursor = getApplication<Application>().contentResolver.query(MediaStore.Files.getContentUri("external"), DOC_PROJECTION, selection, null, MediaStore.Files.FileColumns.DATE_ADDED + " DESC")
-
-                if (cursor != null) {
-                    data = createDocumentType(fileTypes, comparator, getDocumentFromCursor(cursor))
-                    cursor.close()
-                }
+        withContext(Dispatchers.IO) {
+            val cursor = getApplication<Application>().contentResolver.query(
+                MediaStore.Files.getContentUri("external"),
+                DOC_PROJECTION,
+                DOC_SELECTION_STR,
+                null,
+                MediaStore.Files.FileColumns.DATE_MODIFIED + " DESC"
+            )
+            if (cursor != null) {
+                documents.addAll(getDocumentFromCursor(cursor))
+                cursor.close()
             }
-        } else {
-            withContext(Dispatchers.IO) {
-                var exdir = ""
-                if(storagetype == StorageTypes.QQ){
-                    exdir = QQ_DIR
-                } else if(storagetype == StorageTypes.WEIXIN){
-                    exdir = WEIXIN_DIR
-                }
-                if(exdir.isNotEmpty()){
+
+            if(storagetype == StorageTypes.ALL){
+                for (exdir in APP_DIR_LIST){
                     val files = StorageTool.getFiles(getApplication<Application>().applicationContext, exdir)
-                    if(files.isNotEmpty()){
-                        data = createDocumentType(fileTypes, comparator, getDocumentFromFiles(files))
-                    }
+                    if(files.isEmpty())  continue;
+                    documents.addAll(getDocumentFromFiles(files))
                 }
             }
         }
 
-        return data
+        return createDocumentType(fileTypes, comparator, documents)
     }
 
     @WorkerThread
@@ -89,11 +88,21 @@ class VMDocPicker(application: Application) : BaseViewModel(application) {
         for (fileType in fileTypes) {
             val documentListFilteredByType = documents.filter { document -> FilePickerUtils.contains(fileType.extensions, document.mimeType) }
 
-            comparator?.let {
-                documentListFilteredByType.sortedWith(comparator)
+            if(comparator != null){
+                documentMap[fileType] = documentListFilteredByType.sortedWith(comparator)
+            } else {
+                documentMap[fileType] = documentListFilteredByType
             }
+        }
 
-            documentMap[fileType] = documentListFilteredByType
+        for ((key, documents) in documentMap) {
+            for (fileitem in documents) {
+                Log.e("FilePicker", fileitem.name);
+//                Log.e("FilePicker", fileitem.path.path.toString());
+                Log.e("FilePicker", fileitem.mtime.toString());
+//                Log.e("FilePicker", fileitem.size.toString());
+//                Log.e("FilePicker", fileitem.mimeType.toString());
+            }
         }
 
         return documentMap
@@ -129,7 +138,7 @@ class VMDocPicker(application: Application) : BaseViewModel(application) {
                     }
 
                     document.size = data.getString(data.getColumnIndexOrThrow(MediaStore.Files.FileColumns.SIZE))
-
+                    document.mtime = data.getString(data.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATE_MODIFIED))
                     if (!documents.contains(document)) documents.add(document)
                 }
             }
@@ -144,20 +153,18 @@ class VMDocPicker(application: Application) : BaseViewModel(application) {
         for (fileitem in data){
             val imageId:Long = 0
             val path = fileitem.uri.path
-            val title = fileitem.name;
+            val title = fileitem.name
+            val lastmodified = fileitem.lastModified()
 
             if (path != null && title != null) {
                 val fileType = getFileType(PickerManager.getFileTypes(), path)
                 val fileinfo = File(path)
-                Log.e("VMSpecialPicker", path);
-                Log.e("VMSpecialPicker", title);
-                Log.e("VMSpecialPicker", fileType.toString());
                 val document = title?.let { Document(imageId, it, fileitem.uri) }
                 document.fileType = fileType
                 document.size = fileinfo.length().toString()
-                document.mtime = (fileinfo.lastModified() / 1000).toString()
-                document.mimeType = StorageTool.getMimeType(fileinfo)
+                document.mtime = (lastmodified / 1000).toString()
 
+                document.mimeType = StorageTool.getMimeType(fileinfo)
                 if (!documents.contains(document)) documents.add(document)
             }
         }

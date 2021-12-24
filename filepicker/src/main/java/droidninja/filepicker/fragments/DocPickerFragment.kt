@@ -15,11 +15,8 @@ import droidninja.filepicker.R
 import droidninja.filepicker.adapters.SectionsPagerAdapter
 import droidninja.filepicker.models.Document
 import droidninja.filepicker.models.FileType
-import droidninja.filepicker.models.sort.StorageTypes
 import droidninja.filepicker.utils.TabLayoutHelper
-import droidninja.filepicker.viewmodels.BaseViewModel
 import droidninja.filepicker.viewmodels.VMDocPicker
-import droidninja.filepicker.viewmodels.VMSpecialPicker
 
 class DocPickerFragment : BaseFragment() {
 

@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     Toast.LENGTH_SHORT).show();
         } else {
             FilePickerBuilder.getInstance()
-                    .setStorageType(StorageTypes.QQ)
+                    .setStorageType(StorageTypes.ALL)
                     .setMaxCount(1)
                     .setSelectedFiles(docPaths)
                     .setActivityTheme(R.style.FilePickerTheme)

@@ -40,8 +40,9 @@ public class StorageTool {
 
     static public DocumentFile[] getFiles(Context context, String dir) {
         File externalStorageDirectory = Environment.getExternalStorageDirectory();
-        final String externalDir = externalStorageDirectory.getAbsolutePath();
-        DocumentFile file = fileUriUtils.getDoucmentTree(context, externalDir + dir);
+        final String targetdir = externalStorageDirectory.getAbsolutePath() + dir;
+        Log.e("FilePicker", "targetdir:" + targetdir);
+        DocumentFile file = fileUriUtils.getDoucmentTree(context, targetdir);
         DocumentFile[] files = file.listFiles();
         return files;
     }
