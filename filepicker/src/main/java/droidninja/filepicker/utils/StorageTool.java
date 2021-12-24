@@ -1,5 +1,6 @@
 package droidninja.filepicker.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -21,22 +22,6 @@ import java.net.FileNameMap;
 import java.net.URLConnection;
 
 public class StorageTool {
-
-    static public final int REQUEST_CODE_FOR_DIR = 112;
-
-    static public void requestStoragePermission(Activity context, String dir) {
-        fileUriUtils.startFor(dir, context, StorageTool.REQUEST_CODE_FOR_DIR);
-    }
-
-    static public void requestRootStoragePermission(Activity context) {
-        fileUriUtils.startForRoot(context, StorageTool.REQUEST_CODE_FOR_DIR);
-    }
-
-    static public boolean hasRootStoragePermission(Activity context) {
-        final boolean isgrant = fileUriUtils.isGrantForRoot(context);
-        return isgrant;
-    }
-
 
     static public DocumentFile[] getFiles(Context context, String dir) {
         File externalStorageDirectory = Environment.getExternalStorageDirectory();
@@ -89,26 +74,6 @@ public class StorageTool {
                 }
             } catch (IOException ignored) {}
             throw e;
-        }
-    }
-
-    static public void savePermission(Activity context, int code, Intent data){
-        if(code != StorageTool.REQUEST_CODE_FOR_DIR){
-            return;
-        }
-        if(data == null) {
-            return;
-        }
-        Uri uri = data.getData();
-        if(uri == null) {
-            return;
-        }
-        if(code == StorageTool.REQUEST_CODE_FOR_DIR){
-            int flags = data.getFlags();
-            context.getContentResolver().takePersistableUriPermission(
-                    uri, flags & (Intent.FLAG_GRANT_READ_URI_PERMISSION
-                            | Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            );
         }
     }
 

@@ -25,7 +25,7 @@ import droidninja.filepicker.FilePickerConst;
 import droidninja.filepicker.models.sort.SortingTypes;
 import droidninja.filepicker.models.sort.StorageTypes;
 import droidninja.filepicker.utils.ContentUriUtils;
-import droidninja.filepicker.utils.StorageTool;
+import droidninja.filepicker.utils.FilePickerPermission;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -43,15 +43,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        findViewById(R.id.get_permission).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(StorageTool.hasRootStoragePermission(MainActivity.this)){
-                    return;
-                }
-                StorageTool.requestRootStoragePermission(MainActivity.this);
-            }
-        });
 
         findViewById(R.id.pick_doc).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,8 +85,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == StorageTool.REQUEST_CODE_FOR_DIR){
-            StorageTool.savePermission(this, requestCode, data);
+        if(FilePickerPermission.onActivityResult(this, requestCode, resultCode, data)){
             return;
         }
 
@@ -188,6 +178,11 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     }
 
     public void onPickDoc() {
+        if(!FilePickerPermission.hasRootStoragePermission(MainActivity.this)){
+            FilePickerPermission.requestRootStoragePermission(MainActivity.this);
+            return;
+        }
+
 //        String[] zips = {"zip", "rar"};
 //        String[] pdfs = {"aac","mp3","wav"};
         int maxCount = MAX_ATTACHMENT_COUNT - photoPaths.size();
