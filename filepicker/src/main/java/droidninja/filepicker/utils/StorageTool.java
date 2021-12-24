@@ -83,4 +83,10 @@ public class StorageTool {
         return type;
     }
 
+    public static String getFileRealNameFromUri(Context context, Uri fileUri) {
+        if (context == null || fileUri == null) return null;
+        DocumentFile documentFile = DocumentFile.fromSingleUri(context, fileUri);
+        if (documentFile == null) return null;
+        return documentFile.getName();
+    }
 }
