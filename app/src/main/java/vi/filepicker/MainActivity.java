@@ -51,10 +51,10 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             }
         });
 
-        findViewById(R.id.pick_doc).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.pick_photo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pickDocClicked();
+                pickPhotoClicked();
             }
         });
     }
@@ -157,16 +157,16 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     Toast.LENGTH_SHORT).show();
         } else {
             FilePickerBuilder.getInstance()
-                    .setMaxCount(10)
+//                    .setMaxCount(10)
                     .setSelectedFiles(photoPaths) //this is optional
                     .setActivityTheme(R.style.FilePickerTheme)
                     .setActivityTitle("Please select media")
-                    .setImageSizeLimit(5)
-                    .setVideoSizeLimit(10)
+//                    .setImageSizeLimit(5)
+//                    .setVideoSizeLimit(10)
                     .setSpan(FilePickerConst.SPAN_TYPE.FOLDER_SPAN, 3)
                     .setSpan(FilePickerConst.SPAN_TYPE.DETAIL_SPAN, 4)
-                    .enableVideoPicker(true)
-                    .enableCameraSupport(true)
+                    .enableVideoPicker(false)
+                    .enableCameraSupport(false)
                     .showGifs(true)
                     .showFolderView(false)
                     .enableSelectAll(true)

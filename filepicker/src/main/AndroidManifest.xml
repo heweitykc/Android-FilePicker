@@ -16,15 +16,17 @@
         <activity android:name=".MediaDetailsActivity"
             android:configChanges="orientation|screenSize"/>
 
-        <provider
-            android:name=".utils.FilePickerProvider"
-            android:authorities="${applicationId}.droidninja.filepicker.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
-        </provider>
+<!--        <provider-->
+<!--            android:name=".utils.FilePickerProvider"-->
+<!--            android:authorities="${applicationId}.droidninja.filepicker.provider"-->
+<!--            android:exported="false"-->
+<!--            android:grantUriPermissions="true">-->
+<!--            <meta-data-->
+<!--                android:name="android.support.FILE_PROVIDER_PATHS"-->
+<!--                android:resource="@xml/provider_paths"/>-->
+<!--        </provider>-->
+
+
     </application>
 
 </manifest>
