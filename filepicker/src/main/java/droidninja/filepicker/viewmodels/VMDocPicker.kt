@@ -57,6 +57,16 @@ class VMDocPicker(application: Application) : BaseViewModel(application) {
         val documents = mutableListOf<Document>()
 
         withContext(Dispatchers.IO) {
+
+            if (storagetype == StorageTypes.SPECIAL){
+                for (exdir in APP_DIR_LIST){
+                    val files = StorageTool.getFiles(getApplication<Application>().applicationContext, exdir)
+                    if(files.isEmpty())  continue;
+                    documents.addAll(getDocumentFromFiles(files))
+                }
+                return@withContext
+            }
+
             val cursor = getApplication<Application>().contentResolver.query(
                 MediaStore.Files.getContentUri("external"),
                 DOC_PROJECTION,
@@ -77,7 +87,6 @@ class VMDocPicker(application: Application) : BaseViewModel(application) {
                 }
             }
         }
-
         return createDocumentType(fileTypes, comparator, documents)
     }
 
@@ -100,7 +109,7 @@ class VMDocPicker(application: Application) : BaseViewModel(application) {
                 Log.e("FilePicker", fileitem.name);
 //                Log.e("FilePicker", fileitem.path.path.toString());
                 Log.e("FilePicker", fileitem.mtime.toString());
-//                Log.e("FilePicker", fileitem.size.toString());
+                Log.e("FilePicker", fileitem.size.toString());
 //                Log.e("FilePicker", fileitem.mimeType.toString());
             }
         }

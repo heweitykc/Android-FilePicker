@@ -23,8 +23,8 @@ If your app
 ```
 There is a method `getFilePath` in `ContentUriUtils` class through you can get the file path from Uri. e.g.
 
-Java:
 ```java
+Java:
 ContentUriUtils.INSTANCE.getFilePath(getContext(), uri);
 ```
 Kotlin

@@ -82,6 +82,8 @@ class DocPickerFragment : BaseFragment() {
 
     private fun setDataOnFragments(filesMap: Map<FileType, List<Document>>) {
         view.let {
+            if (viewPager.adapter?.count == 1)
+                tabLayout.visibility = View.GONE
             val sectionsPagerAdapter = viewPager.adapter as SectionsPagerAdapter?
             if (sectionsPagerAdapter != null) {
                 for (index in 0 until sectionsPagerAdapter.count) {
@@ -109,7 +111,10 @@ class DocPickerFragment : BaseFragment() {
         viewPager.offscreenPageLimit = supportedTypes.size
         viewPager.adapter = adapter
         tabLayout.setupWithViewPager(viewPager)
-
+        tabLayout.let {
+            if (viewPager.adapter?.count == 1)
+                tabLayout.visibility = View.GONE
+        }
         val mTabLayoutHelper = TabLayoutHelper(tabLayout, viewPager)
         mTabLayoutHelper.isAutoAdjustTabModeEnabled = true
     }

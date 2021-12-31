@@ -30,7 +30,7 @@ class DocFragment : BaseFragment(), FileAdapterListener {
     private var fileListAdapter: FileListAdapter? = null
 
     val fileType: FileType?
-        get() = arguments?.getParcelable(BaseFragment.Companion.FILE_TYPE)
+        get() = arguments?.getParcelable(FILE_TYPE)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -172,7 +172,7 @@ class DocFragment : BaseFragment(), FileAdapterListener {
         fun newInstance(fileType: FileType): DocFragment {
             val photoPickerFragment = DocFragment()
             val bun = Bundle()
-            bun.putParcelable(BaseFragment.Companion.FILE_TYPE, fileType)
+            bun.putParcelable(FILE_TYPE, fileType)
             photoPickerFragment.arguments = bun
             return photoPickerFragment
         }

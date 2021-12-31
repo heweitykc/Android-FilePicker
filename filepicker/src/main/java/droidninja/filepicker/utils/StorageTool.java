@@ -79,8 +79,7 @@ public class StorageTool {
 
     public static String getMimeType(File file){
         FileNameMap fileNameMap = URLConnection.getFileNameMap();
-        String type = fileNameMap.getContentTypeFor(file.getName());
-        return type;
+        return fileNameMap.getContentTypeFor(file.getName());
     }
 
     public static String getFileRealNameFromUri(Context context, Uri fileUri) {

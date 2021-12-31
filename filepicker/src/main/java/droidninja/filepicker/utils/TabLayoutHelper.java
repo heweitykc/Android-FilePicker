@@ -319,12 +319,9 @@ public class TabLayoutHelper {
             adjustTabModeInternal(mTabLayout, prevScrollX);
         } else {
             final int prevScrollX1 = prevScrollX;
-            mAdjustTabModeRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    mAdjustTabModeRunnable = null;
-                    adjustTabModeInternal(mTabLayout, prevScrollX1);
-                }
+            mAdjustTabModeRunnable = () -> {
+                mAdjustTabModeRunnable = null;
+                adjustTabModeInternal(mTabLayout, prevScrollX1);
             };
             mTabLayout.post(mAdjustTabModeRunnable);
         }

@@ -111,6 +111,7 @@ public class fileUriUtils {
                 | Intent.FLAG_GRANT_PREFIX_URI_PERMISSION);
         intent1.putExtra(DocumentsContract.EXTRA_INITIAL_URI, documentFile.getUri());
         context.startActivityForResult(intent1, REQUEST_CODE_FOR_DIR);
+        context.overridePendingTransition(0,0);
     }
 
 
