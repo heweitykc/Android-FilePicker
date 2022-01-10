@@ -162,6 +162,15 @@ object PickerManager {
     }
 
     fun addFileType(fileType: FileType) {
+        val i: Iterator<*> = fileTypes.iterator()
+        while (i.hasNext()) {
+            val ftypeitem = i.next()
+            if(ftypeitem is FileType){
+                if(ftypeitem.title == fileType.title){
+                    return;
+                }
+            }
+        }
         fileTypes.add(fileType)
     }
 
