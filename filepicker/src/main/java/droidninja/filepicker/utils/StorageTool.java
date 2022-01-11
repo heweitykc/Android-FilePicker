@@ -15,11 +15,14 @@ import androidx.core.content.FileProvider;
 import androidx.documentfile.provider.DocumentFile;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.FileNameMap;
 import java.net.URLConnection;
+import java.nio.channels.FileChannel;
 
 public class StorageTool {
 
@@ -87,5 +90,33 @@ public class StorageTool {
         DocumentFile documentFile = DocumentFile.fromSingleUri(context, fileUri);
         if (documentFile == null) return null;
         return documentFile.getName();
+    }
+
+    public static long getFileSize(String filePath){
+        FileChannel fc= null;
+        long fileSize = 0;
+        try {
+            File f= new File(filePath);
+            if (f.exists() && f.isFile()){
+                FileInputStream fis= new FileInputStream(f);
+                fc= fis.getChannel();
+                fileSize = fc.size();
+            }else{
+                Log.e("getFileSize","file doesn't exist or is not a file");
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (null!=fc){
+                try{
+                    fc.close();
+                }catch(IOException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+        return fileSize;
     }
 }

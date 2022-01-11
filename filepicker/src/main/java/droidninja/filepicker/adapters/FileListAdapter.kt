@@ -45,8 +45,12 @@ class FileListAdapter(private val context: Context, private var mFilteredList: L
         }
 
         holder.fileNameTextView.text = document.name
-        holder.fileSizeTextView.text = Formatter.formatShortFileSize(context, java.lang.Long.parseLong(document.size
-                ?: "0"))
+        val filesize = java.lang.Long.parseLong(document.size ?: "0")
+        if(filesize > 0){
+            holder.fileSizeTextView.text = Formatter.formatShortFileSize(context, filesize)
+        } else {
+            holder.fileSizeTextView.text = "";
+        }
 
         holder.itemView.setOnClickListener { onItemClicked(document, holder) }
 
