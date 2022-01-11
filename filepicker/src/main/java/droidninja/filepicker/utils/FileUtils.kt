@@ -1,6 +1,12 @@
 package droidninja.filepicker.utils
 
+import android.app.Activity
+import android.app.Dialog
 import android.text.TextUtils
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.LinearLayout
 
 import java.io.File
 
@@ -56,5 +62,4 @@ object FileUtils {
         val types = arrayOf("txt")
         return FilePickerUtils.contains(types, path)
     }
-
 }
