@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 import android.view.Gravity;
@@ -32,8 +33,6 @@ import droidninja.filepicker.R;
 public class FilePickerPermission {
 
     static public final int REQUEST_CODE_FOR_PERMISSION = 11289;
-    static final  String GUIDE_PREFERENCE_FILE = "guide_preference_file";
-    static final  String GUIDE_PREFERENCE_KEY = "guide_click_key";
 
     static public void requestStoragePermission(Activity context, String dir) {
         fileUriUtils.startFor(dir, context, FilePickerPermission.REQUEST_CODE_FOR_PERMISSION);
@@ -44,6 +43,9 @@ public class FilePickerPermission {
     }
 
     static public boolean hasRootStoragePermission(Activity context) {
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            return true;
+        }
         final boolean isgrant = fileUriUtils.isGrantForRoot(context);
         return isgrant;
     }
