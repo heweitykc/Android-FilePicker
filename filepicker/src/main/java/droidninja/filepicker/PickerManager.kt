@@ -186,9 +186,9 @@ object PickerManager {
 
         val xlss = arrayOf("xls", "xlsx","csv")
         fileTypes.add(FileType(FilePickerConst.XLS, xlss, R.drawable.icon_file_xls))
-
-        val txts = arrayOf("txt")
-        fileTypes.add(FileType(FilePickerConst.TXT, txts, R.drawable.icon_file_unknown))
+//
+//        val txts = arrayOf("txt")
+//        fileTypes.add(FileType(FilePickerConst.TXT, txts, R.drawable.icon_file_unknown))
     }
 
     fun getFileTypes(): ArrayList<FileType> {
