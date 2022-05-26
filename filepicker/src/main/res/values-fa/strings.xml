@@ -5,8 +5,6 @@
 
     <string name="permission_filepicker_rationale">مجوز دسترسی به فایل، برای خواندن فایل ها لازم است.</string>
     <string name="no_files_found">فایلی وجود ندارد</string>
-    <string name="attachments_title_text" formatted="false">(%d/%d)</string>
-    <string name="attachments_num" formatted="false">%d</string>
     <string name="select_photo_text">یک عکس انتخاب کنید</string>
     <string name="select_doc_text">یک مستند انتخاب کنید</string>
     <string name="no_camera_exists">هیچ برنامه برای دوربین وجود ندارد!</string>

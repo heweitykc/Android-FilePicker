@@ -9,8 +9,6 @@
 
     <string name="permission_filepicker_rationale">访问文件需要存储权限</string>
     <string name="no_files_found">找不到文件</string>
-    <string name="attachments_title_text" formatted="false">(%d/%d)</string>
-    <string name="attachments_num" formatted="false">%d</string>
     <string name="select_photo_text">选择照片</string>
     <string name="select_doc_text">选择文档</string>
     <string name="no_camera_exists">没有相机的应用程序！</string>
