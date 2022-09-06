@@ -11,6 +11,7 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.ImageView
 import android.widget.TextView
+import com.palmmob3.globallibs.misc.HelperFunc
 
 import java.util.ArrayList
 
@@ -50,6 +51,13 @@ class FileListAdapter(private val context: Context, private var mFilteredList: L
             holder.fileSizeTextView.text = Formatter.formatShortFileSize(context, filesize)
         } else {
             holder.fileSizeTextView.text = "";
+        }
+
+        val ctime = java.lang.Long.parseLong(document.mtime ?: "0")
+        if(ctime > 0){
+            holder.fileTimeTextView.text =  HelperFunc.getLocalDateStr(ctime*1000)
+        } else {
+            holder.fileTimeTextView.text = "";
         }
 
         holder.itemView.setOnClickListener { onItemClicked(document, holder) }
@@ -146,12 +154,15 @@ class FileListAdapter(private val context: Context, private var mFilteredList: L
 
         internal var fileSizeTextView: TextView
 
+        internal var fileTimeTextView: TextView
+
         init {
             checkBox = itemView.findViewById(R.id.checkbox)
             imageView = itemView.findViewById(R.id.file_iv)
             fileNameTextView = itemView.findViewById(R.id.file_name_tv)
             fileTypeTv = itemView.findViewById(R.id.file_type_tv)
             fileSizeTextView = itemView.findViewById(R.id.file_size_tv)
+            fileTimeTextView = itemView.findViewById(R.id.file_ctime_tv)
         }
     }
 }

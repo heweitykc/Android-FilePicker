@@ -53,15 +53,32 @@
 
         />
 
-    <TextView
-        android:id="@+id/file_size_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <LinearLayout
         android:layout_below="@+id/file_name_tv"
         android:layout_toEndOf="@+id/file_iv"
-        android:layout_toRightOf="@+id/file_iv"
-        tools:text="1.2MB" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
+        <TextView
+            android:id="@+id/file_ctime_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dp_12"
+            android:layout_toRightOf="@+id/file_iv"
+            android:textColor="#999999"
+            android:textSize="@dimen/sp_12"
+            tools:text="09/12/2021" />
+
+        <TextView
+            android:id="@+id/file_size_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/file_iv"
+            android:textColor="#999999"
+            android:textSize="@dimen/sp_12"
+            tools:text="1.2MB" />
+    </LinearLayout>
 
     <droidninja.filepicker.views.SmoothCheckBox
         android:id="@+id/checkbox"

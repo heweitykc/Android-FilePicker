@@ -111,10 +111,9 @@ class DocPickerFragment : BaseFragment() {
         viewPager.offscreenPageLimit = supportedTypes.size
         viewPager.adapter = adapter
         tabLayout.setupWithViewPager(viewPager)
-        tabLayout.let {
-            if (viewPager.adapter?.count == 1)
-                tabLayout.visibility = View.GONE
-        }
+        if (viewPager.adapter?.count == 1)
+            tabLayout.visibility = View.GONE
+
         val mTabLayoutHelper = TabLayoutHelper(tabLayout, viewPager)
         mTabLayoutHelper.isAutoAdjustTabModeEnabled = true
     }

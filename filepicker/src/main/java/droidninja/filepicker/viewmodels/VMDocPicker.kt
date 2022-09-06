@@ -22,7 +22,6 @@ import droidninja.filepicker.utils.StorageTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.util.*
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -115,15 +114,15 @@ class VMDocPicker(application: Application) : BaseViewModel(application) {
             }
         }
 
-        for ((key, documents) in documentMap) {
-            for (fileitem in documents) {
-                Log.e("FilePicker", fileitem.name);
-//                Log.e("FilePicker", fileitem.path.path.toString());
-                Log.e("FilePicker", fileitem.mtime.toString());
-                Log.e("FilePicker", fileitem.size.toString());
-//                Log.e("FilePicker", fileitem.mimeType.toString());
-            }
-        }
+//        for ((key, documents) in documentMap) {
+//            for (fileitem in documents) {
+//                Log.e("FilePicker", fileitem.name);
+////                Log.e("FilePicker", fileitem.path.path.toString());
+////                Log.e("FilePicker", fileitem.mtime.toString());
+//                Log.e("FilePicker", fileitem.size.toString());
+////                Log.e("FilePicker", fileitem.mimeType.toString());
+//            }
+//        }
 
         return documentMap
     }
@@ -181,9 +180,8 @@ class VMDocPicker(application: Application) : BaseViewModel(application) {
                 val fileinfo = File(path)
                 val document = Document(imageId, title, fileitem.uri)
                 document.fileType = fileType
-                document.size = fileinfo.length().toString()
+                document.size = fileitem.length().toString();
                 document.mtime = (lastmodified / 1000).toString()
-
                 document.mimeType = StorageTool.getMimeType(fileinfo)
                 if (!documents.contains(document)) documents.add(document)
             }

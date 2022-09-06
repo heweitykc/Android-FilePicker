@@ -173,16 +173,6 @@ class FilePickerBuilder {
     }
 
     private fun start(context: Activity, requestCode: Int) {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            if (ContextCompat.checkSelfPermission(context,
-//                    FilePickerConst.PERMISSIONS_FILE_PICKER) != PackageManager.PERMISSION_GRANTED) {
-//                Toast.makeText(context,
-//                        context.resources.getString(R.string.permission_filepicker_rationale),
-//                        Toast.LENGTH_SHORT).show()
-//                return
-//            }
-//        }
-
         val intent = Intent(context, FilePickerActivity::class.java)
         intent.putExtras(mPickerOptionsBundle)
 
@@ -191,18 +181,6 @@ class FilePickerBuilder {
 
     private fun start(fragment: Fragment, requestCode: Int) {
         fragment.context?.let {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ContextCompat.checkSelfPermission(it,
-                        FilePickerConst.PERMISSIONS_FILE_PICKER) != PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(fragment.context,
-                        it
-                            .resources
-                            .getString(R.string.permission_filepicker_rationale),
-                        Toast.LENGTH_SHORT).show()
-                    return
-                }
-            }
-
             val intent = Intent(fragment.activity, FilePickerActivity::class.java)
             intent.putExtras(mPickerOptionsBundle)
 
