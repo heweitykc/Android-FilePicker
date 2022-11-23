@@ -158,7 +158,7 @@ class FileListAdapter(private val context: Context, private var mFilteredList: L
 
         init {
             checkBox = itemView.findViewById(R.id.checkbox)
-            imageView = itemView.findViewById(R.id.file_iv)
+            imageView = itemView.findViewById(R.id.img_file)
             fileNameTextView = itemView.findViewById(R.id.file_name_tv)
             fileTypeTv = itemView.findViewById(R.id.file_type_tv)
             fileSizeTextView = itemView.findViewById(R.id.file_size_tv)

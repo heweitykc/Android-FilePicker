@@ -7,7 +7,7 @@
     android:background="@android:color/white">
 
     <ImageView
-        android:id="@+id/file_iv"
+        android:id="@+id/img_file"
         android:layout_width="@dimen/file_icon_width"
         android:layout_height="@dimen/file_icon_height"
         android:layout_margin="10dp"
@@ -17,11 +17,11 @@
         android:id="@+id/file_type_tv"
         android:layout_width="@dimen/file_icon_width"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/file_iv"
-        android:layout_alignLeft="@+id/file_iv"
-        android:layout_alignEnd="@+id/file_iv"
-        android:layout_alignRight="@+id/file_iv"
-        android:layout_alignBottom="@+id/file_iv"
+        android:layout_alignStart="@+id/img_file"
+        android:layout_alignLeft="@+id/img_file"
+        android:layout_alignEnd="@+id/img_file"
+        android:layout_alignRight="@+id/img_file"
+        android:layout_alignBottom="@+id/img_file"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="25dp"
         android:layout_marginRight="10dp"
@@ -40,11 +40,11 @@
         android:id="@+id/file_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/file_iv"
+        android:layout_alignTop="@+id/img_file"
         android:layout_toStartOf="@+id/checkbox"
         android:layout_toLeftOf="@+id/checkbox"
-        android:layout_toEndOf="@+id/file_iv"
-        android:layout_toRightOf="@+id/file_iv"
+        android:layout_toEndOf="@+id/img_file"
+        android:layout_toRightOf="@+id/img_file"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@android:color/black"
@@ -55,7 +55,7 @@
 
     <LinearLayout
         android:layout_below="@+id/file_name_tv"
-        android:layout_toEndOf="@+id/file_iv"
+        android:layout_toEndOf="@+id/img_file"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -65,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/dp_12"
-            android:layout_toRightOf="@+id/file_iv"
+            android:layout_toRightOf="@+id/img_file"
             android:textColor="#999999"
             android:textSize="@dimen/sp_12"
             tools:text="09/12/2021" />
@@ -74,7 +74,7 @@
             android:id="@+id/file_size_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/file_iv"
+            android:layout_toRightOf="@+id/img_file"
             android:textColor="#999999"
             android:textSize="@dimen/sp_12"
             tools:text="1.2MB" />
